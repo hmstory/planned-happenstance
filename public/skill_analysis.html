@@ -40,6 +40,64 @@
             color: #94a3b8;
         }
         
+        .skills-overview {
+            background: rgba(6, 182, 212, 0.1);
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 50px;
+        }
+        
+        .overview-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #06b6d4;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .overview-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .overview-item:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .overview-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .overview-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        
         .skill-section {
             margin-bottom: 40px;
         }
@@ -169,6 +227,40 @@
             font-size: 18px;
         }
         
+        .cta-section {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+        }
+        
+        .cta-text {
+            font-size: 18px;
+            color: #e2e8f0;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        
+        .cta-btn {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+        }
+        
         .footer {
             margin-top: 40px;
             padding: 24px;
@@ -194,6 +286,14 @@
         @media (max-width: 768px) {
             .main-title {
                 font-size: 24px;
+            }
+            
+            .overview-title {
+                font-size: 18px;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr;
             }
             
             .skill-number {
@@ -225,6 +325,32 @@
         <div class="header">
             <h1 class="main-title">Planned Happenstance 5가지 기술 분석</h1>
             <p class="subtitle">크롬볼츠 이벤트에서 발현된 기술들</p>
+        </div>
+        
+        <div class="skills-overview">
+            <h2 class="overview-title">우연을 기회로 만드는 5가지 기술</h2>
+            <div class="overview-grid">
+                <div class="overview-item">
+                    <span class="overview-number">1</span>
+                    <span class="overview-name">Curiosity (호기심)</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-number">2</span>
+                    <span class="overview-name">Persistence (끈기)</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-number">3</span>
+                    <span class="overview-name">Flexibility (유연성)</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-number">4</span>
+                    <span class="overview-name">Optimism (낙관주의)</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-number">5</span>
+                    <span class="overview-name">Risk-taking (위험 감수)</span>
+                </div>
+            </div>
         </div>
         
         <!-- Skill 1: Curiosity -->
@@ -473,6 +599,16 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        
+        <div class="cta-section">
+            <p class="cta-text">
+                이제 당신의 이야기를<br>
+                Planned Happenstance로 분석해보세요!
+            </p>
+            <button class="cta-btn" onclick="window.location.href='my_story_ai.html'">
+                내 이야기 만들기 →
+            </button>
         </div>
         
         <div class="footer">
