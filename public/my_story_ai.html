@@ -18,7 +18,7 @@
         
         .app-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
         .header { text-align: center; margin-bottom: 40px; }
-        .main-title { font-size: 32px; font-weight: 700; rgin-bottom: 12px; }
+        .main-title { font-size: 32px; font-weight: 700; color: #06b6d4; margin-bottom: 12px; }
         .subtitle { font-size: 16px; color: #94a3b8; }
         
         .intro-box {
@@ -193,4 +193,125 @@
                     setAnalysis(analysisText);
                     setStage('result');
                 } catch (error) {
-                    alert('분석 중 오류가 
+                    alert('분석 중 오류가 발생했습니다: ' + error.message);
+                    setStage('input');
+                }
+            };
+            
+            const currentEventData = events[currentEvent - 1];
+            const progress = (currentEvent / 4) * 100;
+            
+            if (stage === 'intro') {
+                return (
+                    <div className="app-container">
+                        <div className="header">
+                            <h1 className="main-title">내 이야기 만들기</h1>
+                            <p className="subtitle">나의 Planned Happenstance 여정</p>
+                        </div>
+                        <div className="intro-box">
+                            <p className="intro-text">
+                                여러분의 인생에서 <strong style={{color: '#06b6d4'}}>우연한 사건</strong>이 
+                                커리어에 영향을 준 순간을 떠올려보세요.
+                            </p>
+                            <p className="intro-text">
+                                4가지 주요 이벤트를 입력하면, AI가 자동으로 
+                                어떤 기술(Curiosity, Persistence, Flexibility, Optimism, Risk-taking)이 
+                                발현되었는지 분석해드립니다.
+                            </p>
+                            <button className="btn-start" onClick={() => setStage('input')}>
+                                시작하기 →
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+            
+            if (stage === 'input') {
+                return (
+                    <div className="app-container">
+                        <div className="header">
+                            <h1 className="main-title">이벤트 {currentEvent}/4</h1>
+                        </div>
+                        <div className="progress-bar">
+                            <p className="progress-text">진행률: {Math.round(progress)}%</p>
+                            <div className="progress-track">
+                                <div className="progress-fill" style={{width: `${progress}%`}}></div>
+                            </div>
+                        </div>
+                        <div className="event-form">
+                            <div className="form-group">
+                                <label className="form-label">시기</label>
+                                <input type="text" className="form-input" placeholder="예: 대학교 2학년, 2015년 여름"
+                                    value={currentEventData.period} onChange={(e) => updateEvent('period', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">이벤트 제목</label>
+                                <input type="text" className="form-input" placeholder="예: 우연히 참가한 창업 동아리"
+                                    value={currentEventData.title} onChange={(e) => updateEvent('title', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">우연한 사건</label>
+                                <textarea className="form-textarea" placeholder="어떤 우연한 일이 일어났나요?"
+                                    value={currentEventData.situation} onChange={(e) => updateEvent('situation', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">나의 행동</label>
+                                <textarea className="form-textarea" placeholder="그 상황에서 어떻게 행동했나요?"
+                                    value={currentEventData.action} onChange={(e) => updateEvent('action', e.target.value)} />
+                            </div>
+                            <div className="button-group">
+                                {currentEvent > 1 && (
+                                    <button className="btn btn-secondary" onClick={handlePrevious}>← 이전</button>
+                                )}
+                                <button className="btn btn-primary" onClick={handleNext}>
+                                    {currentEvent < 4 ? '다음 →' : 'AI 분석 시작'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+            
+            if (stage === 'analyzing') {
+                return (
+                    <div className="app-container">
+                        <div className="analyzing-screen">
+                            <div className="spinner"></div>
+                            <p className="analyzing-text">AI가 분석 중입니다...</p>
+                        </div>
+                    </div>
+                );
+            }
+            
+            if (stage === 'result') {
+                return (
+                    <div className="app-container">
+                        <div className="result-container">
+                            <h2 className="result-title">AI 분석 결과</h2>
+                            <div className="analysis-content">{analysis}</div>
+                            <div style={{textAlign: 'center', marginTop: '30px'}}>
+                                <button className="btn btn-secondary" onClick={() => {
+                                    setStage('intro');
+                                    setCurrentEvent(1);
+                                    setEvents([
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' }
+                                    ]);
+                                    setAnalysis('');
+                                }}>
+                                    다시 만들기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
+        
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MyStoryApp />);
+    </script>
+</body>
+</html>
