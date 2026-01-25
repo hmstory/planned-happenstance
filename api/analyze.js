@@ -14,7 +14,17 @@ export default async function handler(req, res) {
     
     const { events } = req.body;
     
+    // 입력 유효성 검사
+    if (!events || !Array.isArray(events) || events.length === 0) {
+      return res.status(400).json({ error: '이벤트 데이터가 필요합니다.' });
+    }
+    
     try {
+      // API 키 확인
+      if (!process.env.ANTHROPIC_API_KEY) {
+        return res.status(500).json({ error: 'ANTHROPIC_API_KEY가 설정되지 않았습니다.' });
+      }
+
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -23,7 +33,7 @@ export default async function handler(req, res) {
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-3-5-sonnet-latest',
           max_tokens: 2000,
           messages: [{
             role: 'user',
@@ -41,6 +51,15 @@ export default async function handler(req, res) {
       });
       
       const data = await response.json();
+      
+      // API 오류 응답 처리
+      if (!response.ok) {
+        console.error('Anthropic API error:', data);
+        return res.status(response.status).json({ 
+          error: data.error?.message || '분석 중 오류가 발생했습니다.' 
+        });
+      }
+      
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ error: error.message });

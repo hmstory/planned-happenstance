@@ -189,6 +189,18 @@
                     });
                     
                     const data = await response.json();
+                    
+                    // 오류 응답 체크
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    // API 응답 구조 확인
+                    if (!data.content || !data.content[0] || !data.content[0].text) {
+                        console.error('Unexpected API response:', data);
+                        throw new Error('API 응답 형식이 올바르지 않습니다.');
+                    }
+                    
                     const analysisText = data.content[0].text;
                     setAnalysis(analysisText);
                     setStage('result');
