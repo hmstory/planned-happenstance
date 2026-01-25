@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 분석 결과 미리보기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #06b6d4;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        
+        .sample-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .skill-section {
+            margin-bottom: 30px;
+        }
+        
+        .skill-header {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(8, 145, 178, 0.1) 100%);
+            border-left: 5px solid #06b6d4;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .skill-number {
+            font-size: 32px;
+            color: #06b6d4;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .skill-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 6px;
+        }
+        
+        .skill-definition {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        
+        .event-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-left: 20px;
+        }
+        
+        .event-badge {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+        
+        .event-description {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .ai-analysis {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 3px solid #06b6d4;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+        
+        .analysis-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #06b6d4;
+            margin-bottom: 6px;
+        }
+        
+        .analysis-text {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 32px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+        }
+        
+        .cta-text {
+            font-size: 16px;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .skill-header {
+                padding: 16px;
+            }
+            
+            .event-card {
+                padding: 16px;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="badge">AI 분석 미리보기</span>
+            <h1 class="main-title">AI가 어떻게 분석하나요?</h1>
+            <p class="subtitle">실제 사용자 데이터로 생성된 분석 결과 예시</p>
+        </div>
+        
+        <div class="info-box">
+            <p class="info-text">
+                💡 <strong>이것은 샘플 화면입니다.</strong> 실제 앱에서는 여러분이 입력한 4가지 이벤트를 
+                AI가 자동으로 분석하여 각 이벤트에서 어떤 기술(Curiosity, Persistence, Flexibility, 
+                Optimism, Risk-taking)이 발현되었는지 알려줍니다.
+            </p>
+        </div>
+        
+        <p class="sample-label">📝 샘플 분석 결과</p>
+        
+        <!-- Skill 1: Curiosity -->
+        <div class="skill-section">
+            <div class="skill-header">
+                <div class="skill-number">1️⃣</div>
+                <h2 class="skill-title">Curiosity (호기심)</h2>
+                <p class="skill-definition">새로운 학습 기회를 탐색하고 알아보려는 태도</p>
+            </div>
+            
+            <div class="event-card">
+                <span class="event-badge">Event 1</span>
+                <h3 class="event-title">우연히 참가한 창업 동아리 (대학교 2학년)</h3>
+                <p class="event-description">
+                    <strong>우연한 사건:</strong> 친구가 "창업 동아리 같이 가자"고 제안. 
+                    창업에 관심 없었지만 친구 따라 설명회 참석.
+                </p>
+                <p class="event-description">
+                    <strong>나의 행동:</strong> "창업이 뭔지 궁금하네?"라는 생각으로 
+                    첫 프로젝트에 참여. 결국 2년간 활동.
+                </p>
+                
+                <div class="ai-analysis">
+                    <p class="analysis-label">🤖 AI 분석</p>
+                    <p class="analysis-text">
+                        창업에 대한 사전 지식이 없었음에도 "창업이 뭔지 궁금하네?"라는 
+                        호기심을 가지고 설명회에 참석한 것은 <strong>Curiosity</strong>의 
+                        전형적인 발현입니다. 익숙하지 않은 분야에 대한 개방적 태도를 보였습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skill 2: Persistence -->
+        <div class="skill-section">
+            <div class="skill-header">
+                <div class="skill-number">2️⃣</div>
+                <h2 class="skill-title">Persistence (끈기)</h2>
+                <p class="skill-definition">장애물에도 불구하고 노력을 지속하는 능력</p>
+            </div>
+            
+            <div class="event-card">
+                <span class="event-badge">Event 1</span>
+                <h3 class="event-title">우연히 참가한 창업 동아리 (대학교 2학년)</h3>
+                <p class="event-description">
+                    <strong>우연한 사건:</strong> 첫 프로젝트 발표에서 혹평을 받음. 
+                    "이런 아이디어는 절대 안 된다"는 피드백.
+                </p>
+                <p class="event-description">
+                    <strong>나의 행동:</strong> 포기하지 않고 아이디어를 수정. 
+                    결국 2년간 동아리에서 활동하며 3개 프로젝트 완성.
+                </p>
+                
+                <div class="ai-analysis">
+                    <p class="analysis-label">🤖 AI 분석</p>
+                    <p class="analysis-text">
+                        혹평을 받았음에도 포기하지 않고 아이디어를 수정하여 2년간 
+                        지속적으로 활동한 것은 <strong>Persistence</strong>의 명확한 
+                        사례입니다. 초기 실패에도 불구하고 목표를 향해 나아갔습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skill 3: Flexibility -->
+        <div class="skill-section">
+            <div class="skill-header">
+                <div class="skill-number">3️⃣</div>
+                <h2 class="skill-title">Flexibility (유연성)</h2>
+                <p class="skill-definition">태도와 상황을 바꿀 수 있는 능력</p>
+            </div>
+            
+            <div class="event-card">
+                <span class="event-badge">Event 3</span>
+                <h3 class="event-title">전공과 다른 인턴십 합격 (대학교 4학년)</h3>
+                <p class="event-description">
+                    <strong>우연한 사건:</strong> 경영학과인데 IT 스타트업 인턴 공고 발견. 
+                    "전공자만 뽑겠지?"라고 생각했지만 일단 지원.
+                </p>
+                <p class="event-description">
+                    <strong>나의 행동:</strong> 합격 후 "코딩은 못하지만 배우면 되지"라며 
+                    인턴 시작. 결국 정규직 제안까지 받음.
+                </p>
+                
+                <div class="ai-analysis">
+                    <p class="analysis-label">🤖 AI 분석</p>
+                    <p class="analysis-text">
+                        전공(경영학)과 다른 분야(IT)로의 전환을 "배우면 되지"라는 
+                        태도로 받아들인 것은 <strong>Flexibility</strong>의 핵심입니다. 
+                        기존 계획에 얽매이지 않고 새로운 기회에 적응했습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <p class="cta-text">
+                실제 앱에서는 여러분의 이야기를<br>
+                이렇게 AI가 분석해드립니다!
+            </p>
+            <button class="btn-primary" onclick="window.location.href='my_story.html'">
+                내 이야기 만들기 →
+            </button>
+        </div>
+    </div>
+</body>
+</html>
