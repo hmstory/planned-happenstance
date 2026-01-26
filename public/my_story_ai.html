@@ -157,6 +157,7 @@
                 { period: '', title: '', situation: '', action: '' }
             ]);
             const [analysis, setAnalysis] = useState('');
+            const [userName, setUserName] = useState('');
             
             const updateEvent = (field, value) => {
                 const newEvents = [...events];
@@ -230,6 +231,16 @@
                                 어떤 기술(Curiosity, Persistence, Flexibility, Optimism, Risk-taking)이 
                                 발현되었는지 분석해드립니다.
                             </p>
+                            <div style={{marginTop: '24px'}}>
+                                <input 
+                                    type="text" 
+                                    className="form-input"
+                                    placeholder="이름 또는 닉네임을 입력하세요"
+                                    value={userName}
+                                    onChange={(e) => setUserName(e.target.value)}
+                                    style={{marginBottom: '16px'}}
+                                />
+                            </div>
                             <button className="btn-start" onClick={() => setStage('input')}>
                                 시작하기 →
                             </button>
