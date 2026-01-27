@@ -354,6 +354,13 @@
                         })
                     });
                     
+                    // 응답 상태 먼저 확인
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Server error:', response.status, errorText);
+                        throw new Error(`서버 오류 (${response.status}): ${errorText.substring(0, 100)}`);
+                    }
+                    
                     const data = await response.json();
                     
                     if (data.error) {
