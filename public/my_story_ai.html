@@ -301,22 +301,44 @@
             // 저니맵 다운로드 함수
             const downloadJourneyMap = async () => {
                 const journeyElement = document.getElementById('journey-map-container');
-                if (!journeyElement) return;
+                if (!journeyElement) {
+                    alert('저니맵을 찾을 수 없습니다.');
+                    return;
+                }
+                
+                // html2canvas 로드 확인
+                if (typeof html2canvas === 'undefined') {
+                    alert('이미지 변환 라이브러리를 불러오지 못했습니다. 페이지를 새로고침 해주세요.');
+                    return;
+                }
                 
                 try {
                     const canvas = await html2canvas(journeyElement, {
                         backgroundColor: '#0f172a',
-                        scale: 2, // 고해상도
-                        logging: false,
-                        useCORS: true
+                        scale: 2,
+                        logging: true,
+                        useCORS: true,
+                        allowTaint: true,
+                        foreignObjectRendering: false
                     });
                     
-                    // Canvas를 이미지로 변환
-                    const link = document.createElement('a');
-                    link.download = `${userName || '나'}_planned_happenstance_여정.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
+                    // Canvas를 Blob으로 변환 후 다운로드
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            alert('이미지 생성에 실패했습니다.');
+                            return;
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.download = `${userName || '나'}_planned_happenstance_여정.png`;
+                        link.href = url;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 'image/png');
                 } catch (error) {
+                    console.error('Download error:', error);
                     alert('다운로드 중 오류가 발생했습니다: ' + error.message);
                 }
             };
