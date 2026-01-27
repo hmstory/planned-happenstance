@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
     }
 
     const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-3-5-haiku-20241022',
       max_tokens: 2000,
       system: systemPrompt,
       messages: [
