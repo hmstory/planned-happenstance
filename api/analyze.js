@@ -1,6 +1,6 @@
-const Anthropic = require('@anthropic-ai/sdk');
+import Anthropic from '@anthropic-ai/sdk';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // API 키 확인
   if (!process.env.ANTHROPIC_API_KEY) {
     console.error('ANTHROPIC_API_KEY is not set');
@@ -91,4 +91,4 @@ module.exports = async (req, res) => {
       details: error.message 
     });
   }
-};
+}
