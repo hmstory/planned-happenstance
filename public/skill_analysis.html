@@ -195,10 +195,15 @@
             text-align: center;
         }
         
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
         .mapping-table {
             width: 100%;
             border-collapse: collapse;
-            overflow-x: auto;
+            min-width: 600px;
         }
         
         .mapping-table th,
@@ -225,6 +230,30 @@
             color: #06b6d4;
             font-weight: 700;
             font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .mapping-table-section {
+                padding: 20px;
+            }
+            
+            .table-title {
+                font-size: 18px;
+            }
+            
+            .mapping-table {
+                min-width: 500px;
+                font-size: 13px;
+            }
+            
+            .mapping-table th,
+            .mapping-table td {
+                padding: 12px 8px;
+            }
         }
         
         .cta-section {
@@ -551,7 +580,8 @@
         <!-- Mapping Table -->
         <div class="mapping-table-section">
             <h3 class="table-title">기술별 이벤트 매핑 요약</h3>
-            <table class="mapping-table">
+            <div class="table-wrapper">
+                <table class="mapping-table">
                 <thead>
                     <tr>
                         <th>기술</th>
@@ -599,6 +629,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
         
         <div class="cta-section">
