@@ -1,67 +1,89 @@
-export default async function handler(req, res) {
-    // CORS 설정
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
-    
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' });
-    }
-    
-    const { events } = req.body;
-    
-    // 입력 유효성 검사
-    if (!events || !Array.isArray(events) || events.length === 0) {
-      return res.status(400).json({ error: '이벤트 데이터가 필요합니다.' });
-    }
-    
-    try {
-      // API 키 확인
-      if (!process.env.ANTHROPIC_API_KEY) {
-        return res.status(500).json({ error: 'ANTHROPIC_API_KEY가 설정되지 않았습니다.' });
-      }
+const Anthropic = require('@anthropic-ai/sdk');
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-5-20250929',
-          max_tokens: 2000,
-          messages: [{
-            role: 'user',
-            content: `다음은 사용자가 입력한 4가지 인생 사건입니다. Planned Happenstance 이론의 5가지 기술(Curiosity, Persistence, Flexibility, Optimism, Risk-taking)을 분석해주세요.
-  
-  ${events.map((e, i) => `
-  이벤트 ${i + 1}: ${e.title} (${e.period})
-  - 우연한 사건: ${e.situation}
-  - 나의 행동: ${e.action}
-  `).join('\n')}
-  
-  각 기술별로 어떤 이벤트에서 발현되었는지 분석하되, 억지로 모든 기술을 끼워맞추지 마세요. 명확한 것만 분석해주세요.`
-          }]
-        })
-      });
-      
-      const data = await response.json();
-      
-      // API 오류 응답 처리
-      if (!response.ok) {
-        console.error('Anthropic API error:', data);
-        return res.status(response.status).json({ 
-          error: data.error?.message || '분석 중 오류가 발생했습니다.' 
-        });
-      }
-      
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+module.exports = async (req, res) => {
+  // CORS 헤더
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
   }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { events, requestStructuredData } = req.body;
+
+    if (!events || !Array.isArray(events)) {
+      return res.status(400).json({ error: 'Invalid events data' });
+    }
+
+    // 이벤트 정보를 텍스트로 변환
+    const eventsText = events.map((event, index) => `
+이벤트 ${index + 1}:
+- 시기: ${event.period}
+- 제목: ${event.title}
+- 우연한 사건: ${event.situation}
+- 나의 행동: ${event.action}
+    `).join('\n');
+
+    // 구조화된 데이터 요청 여부에 따라 프롬프트 변경
+    let systemPrompt = `당신은 John Krumboltz의 Planned Happenstance Theory 전문가입니다. 
+사용자의 커리어 이벤트를 분석하여 다음 5가지 스킬이 어떻게 발현되었는지 분석해주세요:
+
+1. Curiosity (호기심)
+2. Persistence (지속성)
+3. Flexibility (유연성)
+4. Optimism (낙관성)
+5. Risk-taking (위험 감수)`;
+
+    let userPrompt = `다음 4개의 이벤트를 분석해주세요:\n\n${eventsText}\n\n`;
+
+    if (requestStructuredData) {
+      userPrompt += `
+각 이벤트별로 어떤 스킬이 발현되었는지 분석하고, 반드시 다음 JSON 형식으로도 제공해주세요:
+
+{
+  "events": [
+    {"skills": ["Curiosity", "Risk-taking"]},
+    {"skills": ["Flexibility", "Optimism"]},
+    {"skills": ["Persistence"]},
+    {"skills": ["Curiosity", "Optimism", "Risk-taking"]}
+  ]
+}
+
+먼저 상세한 분석을 한글로 작성하고, 마지막에 위 JSON 형식을 추가해주세요.`;
+    } else {
+      userPrompt += `각 이벤트에서 발현된 스킬을 구체적인 근거와 함께 분석해주세요.`;
+    }
+
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-20251001',
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: [
+        {
+          role: 'user',
+          content: userPrompt
+        }
+      ]
+    });
+
+    res.status(200).json(message);
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ 
+      error: 'Analysis failed',
+      details: error.message 
+    });
+  }
+};
