@@ -17,6 +17,7 @@
         }
         
         .app-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+        .app-container-wide { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
         .header { text-align: center; margin-bottom: 40px; }
         .main-title { font-size: 32px; font-weight: 700; color: #06b6d4; margin-bottom: 12px; }
         .subtitle { font-size: 16px; color: #94a3b8; }
@@ -45,6 +46,11 @@
         }
         
         .btn-start:hover { transform: translateY(-2px); }
+        .btn-start:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
         
         .progress-bar {
             background: rgba(30, 41, 59, 0.6);
@@ -105,11 +111,15 @@
             color: white;
         }
         
+        .btn-primary:hover { transform: translateY(-2px); }
+        
         .btn-secondary {
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(6, 182, 212, 0.3);
             color: #06b6d4;
         }
+        
+        .btn-secondary:hover { background: rgba(30, 41, 59, 0.8); }
         
         .analyzing-screen {
             text-align: center;
@@ -139,10 +149,138 @@
         
         .result-title { font-size: 24px; font-weight: 700; color: #06b6d4; margin-bottom: 30px; text-align: center; }
         .analysis-content { color: #e2e8f0; font-size: 15px; line-height: 1.8; white-space: pre-wrap; }
+        
+        /* Journey Map Styles */
+        .journey-timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .journey-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .app-container-wide {
+                max-width: 100%;
+                padding: 20px 16px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+        }
+        
+        /* Tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .journey-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .journey-point {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .journey-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid rgba(15, 23, 42, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .journey-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            padding: 24px;
+            min-height: 240px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .journey-card {
+                min-height: auto;
+            }
+        }
+        
+        .journey-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .journey-period {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .journey-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .journey-skills-label {
+            font-size: 11px;
+            color: #06b6d4;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .journey-skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .journey-skill-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .journey-skill-dot {
+            margin-right: 6px;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <script type="text/babel">
         const { useState } = React;
@@ -150,6 +288,7 @@
         function MyStoryApp() {
             const [stage, setStage] = useState('intro');
             const [currentEvent, setCurrentEvent] = useState(1);
+            const [userName, setUserName] = useState('');
             const [events, setEvents] = useState([
                 { period: '', title: '', situation: '', action: '' },
                 { period: '', title: '', situation: '', action: '' },
@@ -157,7 +296,30 @@
                 { period: '', title: '', situation: '', action: '' }
             ]);
             const [analysis, setAnalysis] = useState('');
-            const [userName, setUserName] = useState('');
+            const [journeySkills, setJourneySkills] = useState([]);
+            
+            // 저니맵 다운로드 함수
+            const downloadJourneyMap = async () => {
+                const journeyElement = document.getElementById('journey-map-container');
+                if (!journeyElement) return;
+                
+                try {
+                    const canvas = await html2canvas(journeyElement, {
+                        backgroundColor: '#0f172a',
+                        scale: 2, // 고해상도
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    // Canvas를 이미지로 변환
+                    const link = document.createElement('a');
+                    link.download = `${userName || '나'}_planned_happenstance_여정.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (error) {
+                    alert('다운로드 중 오류가 발생했습니다: ' + error.message);
+                }
+            };
             
             const updateEvent = (field, value) => {
                 const newEvents = [...events];
@@ -186,24 +348,43 @@
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ events })
+                        body: JSON.stringify({ 
+                            events,
+                            requestStructuredData: true  // 구조화된 데이터 요청
+                        })
                     });
                     
                     const data = await response.json();
                     
-                    // 오류 응답 체크
                     if (data.error) {
                         throw new Error(data.error);
                     }
                     
-                    // API 응답 구조 확인
                     if (!data.content || !data.content[0] || !data.content[0].text) {
                         console.error('Unexpected API response:', data);
                         throw new Error('API 응답 형식이 올바르지 않습니다.');
                     }
                     
-                    const analysisText = data.content[0].text;
-                    setAnalysis(analysisText);
+                    const responseText = data.content[0].text;
+                    
+                    // JSON 데이터 추출 시도
+                    try {
+                        const jsonMatch = responseText.match(/\{[\s\S]*"events"[\s\S]*\}/);
+                        if (jsonMatch) {
+                            const structuredData = JSON.parse(jsonMatch[0]);
+                            setJourneySkills(structuredData.events || []);
+                        } else {
+                            // JSON을 찾지 못한 경우 기본 스킬 추출
+                            const extractedSkills = extractSkillsFromText(responseText);
+                            setJourneySkills(extractedSkills);
+                        }
+                    } catch (parseError) {
+                        // 파싱 실패 시 텍스트에서 스킬 추출
+                        const extractedSkills = extractSkillsFromText(responseText);
+                        setJourneySkills(extractedSkills);
+                    }
+                    
+                    setAnalysis(responseText);
                     setStage('result');
                 } catch (error) {
                     alert('분석 중 오류가 발생했습니다: ' + error.message);
@@ -211,8 +392,40 @@
                 }
             };
             
+            // 텍스트에서 스킬 추출하는 헬퍼 함수
+            const extractSkillsFromText = (text) => {
+                const skillKeywords = ['Curiosity', 'Persistence', 'Flexibility', 'Optimism', 'Risk-taking'];
+                const extracted = [];
+                
+                // 이벤트 섹션별로 분리 시도
+                const eventSections = text.split(/이벤트\s*\d|Event\s*\d/i);
+                
+                eventSections.forEach((section, index) => {
+                    if (index === 0) return; // 첫 섹션은 헤더일 가능성
+                    
+                    const foundSkills = [];
+                    skillKeywords.forEach(skill => {
+                        if (section.includes(skill)) {
+                            foundSkills.push(skill);
+                        }
+                    });
+                    
+                    extracted.push({ skills: foundSkills });
+                });
+                
+                // 이벤트 수만큼 채우기
+                while (extracted.length < 4) {
+                    extracted.push({ skills: [] });
+                }
+                
+                return extracted.slice(0, 4);
+            };
+            
             const currentEventData = events[currentEvent - 1];
             const progress = (currentEvent / 4) * 100;
+            
+            // 색상 배열
+            const eventColors = ['#06b6d4', '#0891b2', '#0e7490', '#155e75'];
             
             if (stage === 'intro') {
                 return (
@@ -241,7 +454,11 @@
                                     style={{marginBottom: '16px'}}
                                 />
                             </div>
-                            <button className="btn-start" onClick={() => setStage('input')}>
+                            <button 
+                                className="btn-start" 
+                                onClick={() => setStage('input')}
+                                disabled={!userName.trim()}
+                            >
                                 시작하기 →
                             </button>
                         </div>
@@ -312,10 +529,14 @@
                         <div className="result-container">
                             <h2 className="result-title">AI 분석 결과</h2>
                             <div className="analysis-content">{analysis}</div>
-                            <div style={{textAlign: 'center', marginTop: '30px'}}>
+                            <div className="button-group" style={{marginTop: '30px'}}>
+                                <button className="btn btn-primary" onClick={() => setStage('journey_map')}>
+                                    저니맵 보기 🗺️
+                                </button>
                                 <button className="btn btn-secondary" onClick={() => {
                                     setStage('intro');
                                     setCurrentEvent(1);
+                                    setUserName('');
                                     setEvents([
                                         { period: '', title: '', situation: '', action: '' },
                                         { period: '', title: '', situation: '', action: '' },
@@ -323,6 +544,117 @@
                                         { period: '', title: '', situation: '', action: '' }
                                     ]);
                                     setAnalysis('');
+                                    setJourneySkills([]);
+                                }}>
+                                    다시 만들기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+            
+            if (stage === 'journey_map') {
+                return (
+                    <div className="app-container-wide">
+                        <div id="journey-map-container">
+                            <div className="header">
+                                <h1 className="main-title">{userName}님의 Planned Happenstance 여정</h1>
+                                <p className="subtitle">우연한 사건들이 만들어낸 커리어 스토리</p>
+                            </div>
+                            
+                            <div className="journey-timeline">
+                            <div className="journey-grid">
+                                {events.map((event, index) => {
+                                    const color = eventColors[index];
+                                    const skills = journeySkills[index]?.skills || [];
+                                    
+                                    return (
+                                        <div key={index}>
+                                            <div className="journey-point">
+                                                <div 
+                                                    className="journey-number"
+                                                    style={{
+                                                        background: color,
+                                                        boxShadow: `0 0 20px ${color}40`
+                                                    }}
+                                                >
+                                                    {index + 1}
+                                                </div>
+                                            </div>
+                                            
+                                            <div 
+                                                className="journey-card"
+                                                style={{
+                                                    border: `2px solid ${color}40`
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.boxShadow = `0 12px 24px ${color}20`;
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.boxShadow = 'none';
+                                                }}
+                                            >
+                                                <div className="journey-period">{event.period}</div>
+                                                <h3 className="journey-title">{event.title}</h3>
+                                                
+                                                <div>
+                                                    <div className="journey-skills-label">발현된 스킬</div>
+                                                    <div className="journey-skills-list">
+                                                        {skills.length > 0 ? (
+                                                            skills.map((skill, idx) => (
+                                                                <div 
+                                                                    key={idx}
+                                                                    className="journey-skill-tag"
+                                                                    style={{
+                                                                        background: `${color}20`,
+                                                                        border: `1px solid ${color}40`,
+                                                                        color: '#06b6d4'
+                                                                    }}
+                                                                >
+                                                                    <span className="journey-skill-dot">●</span>
+                                                                    {skill}
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div style={{
+                                                                fontSize: '13px',
+                                                                color: '#64748b',
+                                                                fontStyle: 'italic'
+                                                            }}>
+                                                                분석 중...
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div style={{textAlign: 'center', marginTop: '60px'}}>
+                            <div className="button-group" style={{maxWidth: '600px', margin: '0 auto'}}>
+                                <button className="btn btn-primary" onClick={downloadJourneyMap}>
+                                    📥 이미지 다운로드
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => setStage('result')}>
+                                    ← 분석 결과
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => {
+                                    setStage('intro');
+                                    setCurrentEvent(1);
+                                    setUserName('');
+                                    setEvents([
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' },
+                                        { period: '', title: '', situation: '', action: '' }
+                                    ]);
+                                    setAnalysis('');
+                                    setJourneySkills([]);
                                 }}>
                                     다시 만들기
                                 </button>
