@@ -298,25 +298,60 @@
             const [analysis, setAnalysis] = useState('');
             const [journeySkills, setJourneySkills] = useState([]);
             
+            // 상태 초기화 함수 (중복 제거)
+            const resetApp = () => {
+                setStage('intro');
+                setCurrentEvent(1);
+                setUserName('');
+                setEvents([
+                    { period: '', title: '', situation: '', action: '' },
+                    { period: '', title: '', situation: '', action: '' },
+                    { period: '', title: '', situation: '', action: '' },
+                    { period: '', title: '', situation: '', action: '' }
+                ]);
+                setAnalysis('');
+                setJourneySkills([]);
+            };
+            
             // 저니맵 다운로드 함수
             const downloadJourneyMap = async () => {
                 const journeyElement = document.getElementById('journey-map-container');
-                if (!journeyElement) return;
+                if (!journeyElement) {
+                    alert('저니맵을 찾을 수 없습니다.');
+                    return;
+                }
+                
+                if (typeof html2canvas === 'undefined') {
+                    alert('이미지 변환 라이브러리를 불러오지 못했습니다. 페이지를 새로고침 해주세요.');
+                    return;
+                }
                 
                 try {
                     const canvas = await html2canvas(journeyElement, {
                         backgroundColor: '#0f172a',
-                        scale: 2, // 고해상도
+                        scale: 2,
                         logging: false,
-                        useCORS: true
+                        useCORS: true,
+                        allowTaint: true
                     });
                     
-                    // Canvas를 이미지로 변환
-                    const link = document.createElement('a');
-                    link.download = `${userName || '나'}_planned_happenstance_여정.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
+                    // Blob 방식으로 다운로드 (더 안정적)
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            alert('이미지 생성에 실패했습니다.');
+                            return;
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.download = `${userName || '나'}_planned_happenstance_여정.png`;
+                        link.href = url;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 'image/png');
                 } catch (error) {
+                    console.error('Download error:', error);
                     alert('다운로드 중 오류가 발생했습니다: ' + error.message);
                 }
             };
@@ -328,6 +363,14 @@
             };
             
             const handleNext = () => {
+                // 입력 검증
+                const current = events[currentEvent - 1];
+                if (!current.period.trim() || !current.title.trim() || 
+                    !current.situation.trim() || !current.action.trim()) {
+                    alert('모든 필드를 입력해주세요.');
+                    return;
+                }
+                
                 if (currentEvent < 4) {
                     setCurrentEvent(currentEvent + 1);
                 } else {
@@ -344,6 +387,10 @@
             const analyzeEvents = async () => {
                 setStage('analyzing');
                 
+                // 타임아웃 설정 (30초)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                
                 try {
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
@@ -351,8 +398,18 @@
                         body: JSON.stringify({ 
                             events,
                             requestStructuredData: true  // 구조화된 데이터 요청
-                        })
+                        }),
+                        signal: controller.signal
                     });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    // 응답 상태 확인
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Server error:', response.status, errorText);
+                        throw new Error(`서버 오류 (${response.status}): ${errorText.substring(0, 100)}`);
+                    }
                     
                     const data = await response.json();
                     
@@ -390,7 +447,11 @@
                     setAnalysis(displayText);
                     setStage('result');
                 } catch (error) {
-                    alert('분석 중 오류가 발생했습니다: ' + error.message);
+                    if (error.name === 'AbortError') {
+                        alert('분석 시간이 초과되었습니다. 다시 시도해주세요.');
+                    } else {
+                        alert('분석 중 오류가 발생했습니다: ' + error.message);
+                    }
                     setStage('input');
                 }
             };
@@ -536,19 +597,7 @@
                                 <button className="btn btn-primary" onClick={() => setStage('journey_map')}>
                                     저니맵 보기 🗺️
                                 </button>
-                                <button className="btn btn-secondary" onClick={() => {
-                                    setStage('intro');
-                                    setCurrentEvent(1);
-                                    setUserName('');
-                                    setEvents([
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' }
-                                    ]);
-                                    setAnalysis('');
-                                    setJourneySkills([]);
-                                }}>
+                                <button className="btn btn-secondary" onClick={resetApp}>
                                     다시 만들기
                                 </button>
                             </div>
@@ -646,19 +695,7 @@
                                 <button className="btn btn-secondary" onClick={() => setStage('result')}>
                                     ← 분석 결과
                                 </button>
-                                <button className="btn btn-secondary" onClick={() => {
-                                    setStage('intro');
-                                    setCurrentEvent(1);
-                                    setUserName('');
-                                    setEvents([
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' },
-                                        { period: '', title: '', situation: '', action: '' }
-                                    ]);
-                                    setAnalysis('');
-                                    setJourneySkills([]);
-                                }}>
+                                <button className="btn btn-secondary" onClick={resetApp}>
                                     다시 만들기
                                 </button>
                             </div>
