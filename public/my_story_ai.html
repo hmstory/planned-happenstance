@@ -210,6 +210,42 @@
             font-family: monospace;
         }
         
+        /* 마크다운 테이블 스타일 - 모바일 반응형 */
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 13px;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .markdown-content th, .markdown-content td {
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        .markdown-content th {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            font-weight: 600;
+        }
+        
+        .markdown-content td {
+            background: rgba(15, 23, 42, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .markdown-content table {
+                font-size: 11px;
+            }
+            .markdown-content th, .markdown-content td {
+                padding: 6px 8px;
+            }
+        }
+        
         /* PDF Mode Styles - 흰 배경 + 검은 텍스트 */
         .pdf-mode {
             background: #ffffff !important;
@@ -244,6 +280,22 @@
         
         .pdf-mode .markdown-content hr {
             border-top-color: #d1d5db !important;
+        }
+        
+        .pdf-mode .markdown-content table {
+            white-space: normal;
+        }
+        
+        .pdf-mode .markdown-content th {
+            background: #e0f2fe !important;
+            color: #0891b2 !important;
+            border-color: #94a3b8 !important;
+        }
+        
+        .pdf-mode .markdown-content td {
+            background: #f8fafc !important;
+            color: #374151 !important;
+            border-color: #94a3b8 !important;
         }
         
         /* Journey Map Styles */
@@ -713,7 +765,7 @@
             };
             
             // PDF 다운로드 함수
-            const downloadPDF = () => {
+            const downloadPDF = async () => {
                 const element = document.getElementById('pdf-content');
                 if (!element) {
                     alert('PDF를 생성할 콘텐츠를 찾을 수 없습니다.');
@@ -723,22 +775,31 @@
                 // PDF용 스타일 임시 적용 (흰 배경 + 검은 텍스트)
                 element.classList.add('pdf-mode');
                 
+                // 스타일 적용을 위해 잠시 대기
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
                 const opt = {
                     margin: [15, 15, 15, 15],
                     filename: `${userName}_AI분석결과.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
+                    image: { type: 'png', quality: 1 },
                     html2canvas: { 
                         scale: 2, 
                         useCORS: true,
-                        backgroundColor: '#ffffff'
+                        backgroundColor: '#ffffff',
+                        logging: true
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
                 
-                html2pdf().set(opt).from(element).save().then(() => {
+                try {
+                    await html2pdf().set(opt).from(element).save();
+                } catch (error) {
+                    console.error('PDF 생성 오류:', error);
+                    alert('PDF 생성 중 오류가 발생했습니다.');
+                } finally {
                     // PDF 생성 후 원래 스타일로 복원
                     element.classList.remove('pdf-mode');
-                });
+                }
             };
             
             if (stage === 'result') {
