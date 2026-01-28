@@ -7,6 +7,7 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -148,129 +149,64 @@
         }
         
         .result-title { font-size: 24px; font-weight: 700; color: #06b6d4; margin-bottom: 30px; text-align: center; }
-        .analysis-content { color: #e2e8f0; font-size: 15px; line-height: 1.8; white-space: pre-wrap; }
         
-        /* Result Card Styles */
-        .result-cards { display: flex; flex-direction: column; gap: 20px; }
-        
-        .result-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(71, 85, 105, 0.5);
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.3s ease;
-        }
-        
-        .result-card:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .result-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .result-card-number {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            color: white;
-            flex-shrink: 0;
-        }
-        
-        .result-card-title {
-            font-size: 18px;
-            font-weight: 600;
+        /* Markdown Rendered Content Styles */
+        .markdown-content {
             color: #e2e8f0;
+            font-size: 15px;
+            line-height: 1.8;
         }
         
-        .result-card-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
+        .markdown-content h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #06b6d4;
+            margin: 32px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
         }
         
-        .skill-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
+        .markdown-content h2:first-child {
+            margin-top: 0;
         }
         
-        .skill-tag.curiosity { background: rgba(234, 179, 8, 0.2); color: #fbbf24; border: 1px solid rgba(234, 179, 8, 0.3); }
-        .skill-tag.persistence { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .skill-tag.flexibility { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-        .skill-tag.optimism { background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
-        .skill-tag.risk-taking { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .markdown-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin: 20px 0 12px 0;
+        }
         
-        .result-card-event {
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 8px;
-            padding: 12px 16px;
+        .markdown-content p {
             margin-bottom: 12px;
         }
         
-        .result-card-event-label {
-            font-size: 12px;
-            color: #64748b;
+        .markdown-content strong {
+            color: #fbbf24;
             font-weight: 600;
-            margin-bottom: 4px;
         }
         
-        .result-card-event-text {
-            font-size: 14px;
+        .markdown-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .markdown-content li {
+            margin-bottom: 8px;
             color: #cbd5e1;
-            line-height: 1.5;
         }
         
-        .result-card-analysis {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .result-card-analysis-text {
-            font-size: 15px;
-            color: #e2e8f0;
-            line-height: 1.7;
-        }
-        
-        .detailed-analysis {
-            margin-top: 32px;
-            padding-top: 32px;
+        .markdown-content hr {
+            border: none;
             border-top: 1px solid rgba(71, 85, 105, 0.5);
+            margin: 24px 0;
         }
         
-        .detailed-analysis-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #06b6d4;
-            margin-bottom: 20px;
-        }
-        
-        .detailed-analysis-content {
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 12px;
-            padding: 24px;
-            color: #e2e8f0;
-            font-size: 15px;
-            line-height: 1.9;
-            white-space: pre-wrap;
+        .markdown-content code {
+            background: rgba(6, 182, 212, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
         }
         
         /* Journey Map Styles */
@@ -716,28 +652,14 @@
                 );
             }
             
-            // 스킬 이름을 CSS 클래스로 변환
-            const getSkillClass = (skill) => {
-                const skillMap = {
-                    'Curiosity': 'curiosity',
-                    'Persistence': 'persistence',
-                    'Flexibility': 'flexibility',
-                    'Optimism': 'optimism',
-                    'Risk-taking': 'risk-taking'
-                };
-                return skillMap[skill] || 'curiosity';
-            };
-            
-            // 스킬 이모지 매핑
-            const getSkillEmoji = (skill) => {
-                const emojiMap = {
-                    'Curiosity': '🔍',
-                    'Persistence': '💪',
-                    'Flexibility': '🌊',
-                    'Optimism': '☀️',
-                    'Risk-taking': '🎯'
-                };
-                return emojiMap[skill] || '✨';
+            // 마크다운을 HTML로 변환
+            const renderMarkdown = (text) => {
+                if (!text) return '';
+                try {
+                    return { __html: marked.parse(text) };
+                } catch (e) {
+                    return { __html: text };
+                }
             };
             
             if (stage === 'result') {
@@ -746,62 +668,10 @@
                         <div className="result-container">
                             <h2 className="result-title">{userName}님의 AI 분석 결과</h2>
                             
-                            <div className="result-cards">
-                                {events.map((event, index) => {
-                                    const skills = journeySkills[index]?.skills || [];
-                                    const eventAnalysis = journeySkills[index]?.analysis || '';
-                                    
-                                    return (
-                                        <div key={index} className="result-card">
-                                            <div className="result-card-header">
-                                                <div className="result-card-number">{index + 1}</div>
-                                                <h3 className="result-card-title">{event.title || `이벤트 ${index + 1}`}</h3>
-                                            </div>
-                                            
-                                            <div className="result-card-skills">
-                                                {skills.length > 0 ? (
-                                                    skills.map((skill, idx) => (
-                                                        <span key={idx} className={`skill-tag ${getSkillClass(skill)}`}>
-                                                            {getSkillEmoji(skill)} {skill}
-                                                        </span>
-                                                    ))
-                                                ) : (
-                                                    <span style={{color: '#64748b', fontSize: '13px'}}>스킬 분석 중...</span>
-                                                )}
-                                            </div>
-                                            
-                                            {eventAnalysis && (
-                                                <div className="result-card-analysis">
-                                                    <p className="result-card-event-label">🤖 AI 분석</p>
-                                                    <p className="result-card-analysis-text">{eventAnalysis}</p>
-                                                </div>
-                                            )}
-                                            
-                                            <div className="result-card-event">
-                                                <p className="result-card-event-label">📅 시기</p>
-                                                <p className="result-card-event-text">{event.period}</p>
-                                            </div>
-                                            
-                                            <div className="result-card-event">
-                                                <p className="result-card-event-label">⚡ 우연한 사건</p>
-                                                <p className="result-card-event-text">{event.situation}</p>
-                                            </div>
-                                            
-                                            <div className="result-card-event">
-                                                <p className="result-card-event-label">🎬 나의 행동</p>
-                                                <p className="result-card-event-text">{event.action}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            
-                            {analysis && (
-                                <div className="detailed-analysis">
-                                    <h3 className="detailed-analysis-title">📊 상세 AI 분석</h3>
-                                    <div className="detailed-analysis-content">{analysis}</div>
-                                </div>
-                            )}
+                            <div 
+                                className="markdown-content" 
+                                dangerouslySetInnerHTML={renderMarkdown(analysis)}
+                            />
                             
                             <div className="button-group" style={{marginTop: '30px'}}>
                                 <button className="btn btn-primary" onClick={() => setStage('journey_map')}>

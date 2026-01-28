@@ -55,27 +55,24 @@ export default async function handler(req, res) {
 
     if (requestStructuredData) {
       userPrompt += `
-각 이벤트별로 어떤 스킬이 발현되었는지 상세하게 분석해주세요.
+각 이벤트별로 어떤 스킬이 발현되었는지 분석하고, 마지막에 JSON을 추가해주세요.
 
 분석 형식:
-1. 각 스킬별로 발현 정도를 ★ (1~5개)로 표시
-2. 각 스킬이 왜 발현되었는지 구체적인 근거 제시
+## 이벤트 1: [제목]
+### 주요 분석
+**Curiosity (호기심)** ★★★★★
+- 구체적인 근거 1
+- 구체적인 근거 2
 
-그리고 마지막에 반드시 다음 JSON 형식을 추가해주세요:
+**Risk-taking (위험 감수)** ★★★
+- 구체적인 근거
 
-{
-  "events": [
-    {"skills": ["Curiosity", "Risk-taking"]},
-    {"skills": ["Flexibility", "Optimism"]},
-    {"skills": ["Persistence"]},
-    {"skills": ["Curiosity", "Optimism", "Risk-taking"]}
-  ]
-}
+---
 
-중요: 
-- 먼저 각 이벤트별로 풍부하고 상세한 분석을 한글로 작성하세요.
-- 사용자가 "나도 모르게 이 기술들을 발휘해서 우연을 기회로 만들었구나"라고 깨달을 수 있도록 분석해주세요.
-- 마지막에 위 JSON 형식을 추가하세요.`;
+마지막에 다음 JSON 형식을 추가:
+{"events":[{"skills":["Curiosity","Risk-taking"]},{"skills":["Flexibility","Optimism"]},{"skills":["Persistence"]},{"skills":["Curiosity","Optimism"]}]}
+
+중요: 사용자가 "나도 모르게 이 기술들을 발휘해서 우연을 기회로 만들었구나"라고 깨달을 수 있도록 분석해주세요.`;
     } else {
       userPrompt += `각 이벤트에서 발현된 스킬을 구체적인 근거와 함께 분석해주세요.`;
     }
