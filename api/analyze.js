@@ -53,9 +53,8 @@ export default async function handler(req, res) {
 
     let userPrompt = `다음 4개의 이벤트를 분석해주세요:\n\n${eventsText}\n\n`;
 
-    if (requestStructuredData) {
-      userPrompt += `
-각 이벤트별로 어떤 스킬이 발현되었는지 분석하고, 마지막에 JSON을 추가해주세요.
+    userPrompt += `
+각 이벤트별로 어떤 스킬이 발현되었는지 분석해주세요.
 
 분석 형식:
 ## 이벤트 1: [제목]
@@ -69,13 +68,7 @@ export default async function handler(req, res) {
 
 ---
 
-마지막에 다음 JSON 형식을 추가:
-{"events":[{"skills":["Curiosity","Risk-taking"]},{"skills":["Flexibility","Optimism"]},{"skills":["Persistence"]},{"skills":["Curiosity","Optimism"]}]}
-
 중요: 사용자가 "나도 모르게 이 기술들을 발휘해서 우연을 기회로 만들었구나"라고 깨달을 수 있도록 분석해주세요.`;
-    } else {
-      userPrompt += `각 이벤트에서 발현된 스킬을 구체적인 근거와 함께 분석해주세요.`;
-    }
 
     const message = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
