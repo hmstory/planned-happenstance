@@ -250,6 +250,29 @@
             line-height: 1.7;
         }
         
+        .detailed-analysis {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        
+        .detailed-analysis-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #06b6d4;
+            margin-bottom: 20px;
+        }
+        
+        .detailed-analysis-content {
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            padding: 24px;
+            color: #e2e8f0;
+            font-size: 15px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+        }
+        
         /* Journey Map Styles */
         .journey-timeline {
             position: relative;
@@ -772,6 +795,13 @@
                                     );
                                 })}
                             </div>
+                            
+                            {analysis && (
+                                <div className="detailed-analysis">
+                                    <h3 className="detailed-analysis-title">📊 상세 AI 분석</h3>
+                                    <div className="detailed-analysis-content">{analysis}</div>
+                                </div>
+                            )}
                             
                             <div className="button-group" style={{marginTop: '30px'}}>
                                 <button className="btn btn-primary" onClick={() => setStage('journey_map')}>
