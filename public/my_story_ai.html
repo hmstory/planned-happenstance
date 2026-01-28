@@ -8,6 +8,7 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -675,20 +676,44 @@
                 }
             };
             
+            // PDF 다운로드 함수
+            const downloadPDF = () => {
+                const element = document.getElementById('pdf-content');
+                if (!element) {
+                    alert('PDF를 생성할 콘텐츠를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: `${userName}_AI분석결과.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                html2pdf().set(opt).from(element).save();
+            };
+            
             if (stage === 'result') {
                 return (
                     <div className="app-container">
                         <div className="result-container">
-                            <h2 className="result-title">{userName}님의 AI 분석 결과</h2>
-                            
-                            <div 
-                                className="markdown-content" 
-                                dangerouslySetInnerHTML={renderMarkdown(analysis)}
-                            />
+                            <div id="pdf-content" style={{padding: '20px', background: '#0f172a'}}>
+                                <h2 className="result-title">{userName}님의 AI 분석 결과</h2>
+                                
+                                <div 
+                                    className="markdown-content" 
+                                    dangerouslySetInnerHTML={renderMarkdown(analysis)}
+                                />
+                            </div>
                             
                             <div className="button-group" style={{marginTop: '30px'}}>
                                 <button className="btn btn-primary" onClick={() => setStage('journey_map')}>
                                     저니맵 보기 🗺️
+                                </button>
+                                <button className="btn btn-secondary" onClick={downloadPDF}>
+                                    PDF 다운로드 📥
                                 </button>
                                 <button className="btn btn-secondary" onClick={resetApp}>
                                     다시 만들기
