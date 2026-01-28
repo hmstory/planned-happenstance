@@ -8,7 +8,6 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -246,57 +245,6 @@
             }
         }
         
-        /* PDF Mode Styles - 흰 배경 + 검은 텍스트 */
-        .pdf-mode {
-            background: #ffffff !important;
-            color: #1a1a1a !important;
-            padding: 30px !important;
-        }
-        
-        .pdf-mode .result-title {
-            color: #0891b2 !important;
-        }
-        
-        .pdf-mode .markdown-content {
-            color: #1a1a1a !important;
-        }
-        
-        .pdf-mode .markdown-content h2 {
-            color: #0891b2 !important;
-            border-bottom-color: #0891b2 !important;
-        }
-        
-        .pdf-mode .markdown-content h3 {
-            color: #374151 !important;
-        }
-        
-        .pdf-mode .markdown-content strong {
-            color: #b45309 !important;
-        }
-        
-        .pdf-mode .markdown-content li {
-            color: #374151 !important;
-        }
-        
-        .pdf-mode .markdown-content hr {
-            border-top-color: #d1d5db !important;
-        }
-        
-        .pdf-mode .markdown-content table {
-            white-space: normal;
-        }
-        
-        .pdf-mode .markdown-content th {
-            background: #e0f2fe !important;
-            color: #0891b2 !important;
-            border-color: #94a3b8 !important;
-        }
-        
-        .pdf-mode .markdown-content td {
-            background: #f8fafc !important;
-            color: #374151 !important;
-            border-color: #94a3b8 !important;
-        }
         
         /* Journey Map Styles */
         .journey-timeline {
@@ -764,63 +712,20 @@
                 }
             };
             
-            // PDF 다운로드 함수
-            const downloadPDF = async () => {
-                const element = document.getElementById('pdf-content');
-                if (!element) {
-                    alert('PDF를 생성할 콘텐츠를 찾을 수 없습니다.');
-                    return;
-                }
-                
-                // PDF용 스타일 임시 적용 (흰 배경 + 검은 텍스트)
-                element.classList.add('pdf-mode');
-                
-                // 스타일 적용을 위해 잠시 대기
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                const opt = {
-                    margin: [15, 15, 15, 15],
-                    filename: `${userName}_AI분석결과.pdf`,
-                    image: { type: 'png', quality: 1 },
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true,
-                        backgroundColor: '#ffffff',
-                        logging: true
-                    },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-                
-                try {
-                    await html2pdf().set(opt).from(element).save();
-                } catch (error) {
-                    console.error('PDF 생성 오류:', error);
-                    alert('PDF 생성 중 오류가 발생했습니다.');
-                } finally {
-                    // PDF 생성 후 원래 스타일로 복원
-                    element.classList.remove('pdf-mode');
-                }
-            };
-            
             if (stage === 'result') {
                 return (
                     <div className="app-container">
                         <div className="result-container">
-                            <div id="pdf-content" style={{padding: '20px', background: '#0f172a'}}>
-                                <h2 className="result-title">{userName}님의 AI 분석 결과</h2>
-                                
-                                <div 
-                                    className="markdown-content" 
-                                    dangerouslySetInnerHTML={renderMarkdown(analysis)}
-                                />
-                            </div>
+                            <h2 className="result-title">{userName}님의 AI 분석 결과</h2>
+                            
+                            <div 
+                                className="markdown-content" 
+                                dangerouslySetInnerHTML={renderMarkdown(analysis)}
+                            />
                             
                             <div className="button-group" style={{marginTop: '30px'}}>
                                 <button className="btn btn-primary" onClick={() => setStage('journey_map')}>
                                     저니맵 보기 🗺️
-                                </button>
-                                <button className="btn btn-secondary" onClick={downloadPDF}>
-                                    PDF 다운로드 📥
                                 </button>
                                 <button className="btn btn-secondary" onClick={resetApp}>
                                     다시 만들기
