@@ -236,6 +236,20 @@
             line-height: 1.5;
         }
         
+        .result-card-analysis {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .result-card-analysis-text {
+            font-size: 15px;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+        
         /* Journey Map Styles */
         .journey-timeline {
             position: relative;
@@ -712,6 +726,7 @@
                             <div className="result-cards">
                                 {events.map((event, index) => {
                                     const skills = journeySkills[index]?.skills || [];
+                                    const eventAnalysis = journeySkills[index]?.analysis || '';
                                     
                                     return (
                                         <div key={index} className="result-card">
@@ -731,6 +746,13 @@
                                                     <span style={{color: '#64748b', fontSize: '13px'}}>스킬 분석 중...</span>
                                                 )}
                                             </div>
+                                            
+                                            {eventAnalysis && (
+                                                <div className="result-card-analysis">
+                                                    <p className="result-card-event-label">🤖 AI 분석</p>
+                                                    <p className="result-card-analysis-text">{eventAnalysis}</p>
+                                                </div>
+                                            )}
                                             
                                             <div className="result-card-event">
                                                 <p className="result-card-event-label">📅 시기</p>

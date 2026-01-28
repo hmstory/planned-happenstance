@@ -55,18 +55,19 @@ export default async function handler(req, res) {
 
     if (requestStructuredData) {
       userPrompt += `
-각 이벤트별로 어떤 스킬이 발현되었는지 분석하고, 반드시 다음 JSON 형식으로도 제공해주세요:
+각 이벤트별로 어떤 스킬이 발현되었는지 분석하고, 반드시 다음 JSON 형식으로 제공해주세요:
 
 {
   "events": [
-    {"skills": ["Curiosity", "Risk-taking"]},
-    {"skills": ["Flexibility", "Optimism"]},
-    {"skills": ["Persistence"]},
-    {"skills": ["Curiosity", "Optimism", "Risk-taking"]}
+    {"skills": ["Curiosity", "Risk-taking"], "analysis": "이 이벤트에서 발현된 스킬에 대한 상세 분석 (2-3문장)"},
+    {"skills": ["Flexibility", "Optimism"], "analysis": "이 이벤트에서 발현된 스킬에 대한 상세 분석 (2-3문장)"},
+    {"skills": ["Persistence"], "analysis": "이 이벤트에서 발현된 스킬에 대한 상세 분석 (2-3문장)"},
+    {"skills": ["Curiosity", "Optimism", "Risk-taking"], "analysis": "이 이벤트에서 발현된 스킬에 대한 상세 분석 (2-3문장)"}
   ]
 }
 
-먼저 상세한 분석을 한글로 작성하고, 마지막에 위 JSON 형식을 추가해주세요.`;
+중요: 반드시 JSON만 출력하세요. JSON 외의 텍스트는 출력하지 마세요.
+analysis 필드에는 해당 이벤트에서 각 스킬이 왜 발현되었는지 구체적으로 설명해주세요.`;
     } else {
       userPrompt += `각 이벤트에서 발현된 스킬을 구체적인 근거와 함께 분석해주세요.`;
     }
