@@ -12,31 +12,44 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-        .top-buttons {
+        .top-nav {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 0;
+            right: 0;
+            padding: 16px;
             z-index: 100;
             display: flex;
+            align-items: center;
             gap: 8px;
         }
-        .skip-btn, .lang-btn {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            color: #06b6d4;
-            padding: 10px 20px;
+        .nav-pill {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 6px 12px;
             border-radius: 8px;
             font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
+        }
+        .nav-pill.skip {
+            color: #9ca3af;
+            border: 1px solid #4b5563;
             text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .skip-btn:hover, .lang-btn:hover {
-            background: rgba(30, 41, 59, 1);
-            border-color: rgba(6, 182, 212, 0.5);
+        .nav-pill.skip:hover { color: #06b6d4; border-color: #06b6d4; }
+        .nav-pill.lang {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .nav-pill.lang a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-pill.lang a:hover { color: #06b6d4; }
+        .nav-pill.lang .active { font-weight: 600; color: #06b6d4; }
+        .nav-pill.lang .sep { color: #4b5563; }
         .container { max-width: 700px; margin: 0 auto; }
         .header { text-align: center; margin-bottom: 50px; }
         .main-title { font-size: 32px; font-weight: 700; color: #06b6d4; margin-bottom: 12px; }
@@ -120,15 +133,19 @@
             .event-title { font-size: 18px; }
             .timeline { padding-left: 30px; }
             .event-dot { left: -26px; width: 32px; height: 32px; font-size: 14px; }
-            .top-buttons { top: 12px; right: 12px; gap: 6px; }
-            .skip-btn, .lang-btn { padding: 8px 14px; font-size: 13px; }
+            .top-nav { padding: 8px; gap: 4px; }
+            .nav-pill { font-size: 12px; padding: 4px 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="top-buttons">
-        <a href="https://planned-happenstance-en.vercel.app/krumboltz.html" class="lang-btn">English</a>
-        <button class="skip-btn" onclick="window.location.href='skill_analysis.html'">건너뛰기</button>
+    <div class="top-nav">
+        <a href="skill_analysis.html" class="nav-pill skip">건너뛰기</a>
+        <div class="nav-pill lang">
+            <a href="https://planned-happenstance-en.vercel.app/krumboltz.html">English</a>
+            <span class="sep">|</span>
+            <span class="active">한</span>
+        </div>
     </div>
 
     <div class="container">
