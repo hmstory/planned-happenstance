@@ -4,494 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planned Happenstance 5가지 기술 분석</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .main-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #06b6d4;
-            margin-bottom: 12px;
-        }
-        
-        .subtitle {
-            font-size: 16px;
-            color: #94a3b8;
-        }
-        
-        .skills-overview {
-            background: rgba(6, 182, 212, 0.1);
-            border: 2px solid rgba(6, 182, 212, 0.3);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 50px;
-        }
-        
-        .overview-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #06b6d4;
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        
-        .overview-item {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .overview-item:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        .overview-number {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
-            color: white;
-            flex-shrink: 0;
-        }
-        
-        .overview-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: #e2e8f0;
-        }
-        
-        .skill-section {
-            margin-bottom: 40px;
-        }
-        
-        .skill-header {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(8, 145, 178, 0.1) 100%);
-            border-left: 5px solid #06b6d4;
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
-        }
-        
-        .skill-number {
-            font-size: 40px;
-            color: #06b6d4;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .skill-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #e2e8f0;
-            margin-bottom: 8px;
-        }
-        
-        .skill-definition {
-            font-size: 15px;
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-        
-        .events-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .event-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(71, 85, 105, 0.5);
-            border-radius: 12px;
-            padding: 24px;
-            margin-left: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .event-card:hover {
-            border-color: rgba(100, 116, 139, 0.7);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .event-badge {
-            display: inline-block;
-            background: rgba(6, 182, 212, 0.2);
-            color: #06b6d4;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .event-description {
-            font-size: 15px;
-            color: #cbd5e1;
-            line-height: 1.7;
-            margin-bottom: 12px;
-        }
-        
-        .manifestation {
-            background: rgba(6, 182, 212, 0.1);
-            border-left: 3px solid #06b6d4;
-            padding: 12px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-        
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 24px;
-            }
-        }
-        
-        .cta-section {
-            margin-top: 60px;
-            text-align: center;
-            padding: 40px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid rgba(6, 182, 212, 0.3);
-            border-radius: 16px;
-        }
-        
-        .cta-text {
-            font-size: 18px;
-            color: #e2e8f0;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        
-        .cta-btn {
-            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            color: white;
-            padding: 16px 40px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
-        }
-        
-        .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
-        }
-        
-        .footer {
-            margin-top: 40px;
-            padding: 24px;
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .source-link {
-            font-size: 13px;
-            color: #64748b;
-        }
-        
-        .source-link a {
-            color: #06b6d4;
-            text-decoration: none;
-        }
-        
-        .source-link a:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 24px;
-            }
-            
-            .overview-title {
-                font-size: 18px;
-            }
-            
-            .overview-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .skill-number {
-                font-size: 32px;
-            }
-            
-            .skill-title {
-                font-size: 22px;
-            }
-            
-            .event-card {
-                padding: 20px;
-                margin-left: 10px;
-            }
-            
-            .mapping-table {
-                font-size: 12px;
-            }
-            
-            .mapping-table th,
-            .mapping-table td {
-                padding: 12px;
-            }
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1 class="main-title">Planned Happenstance 5가지 기술 분석</h1>
-            <p class="subtitle">크롬볼츠 이벤트에서 발현된 기술들</p>
-        </div>
-        
-        <div class="skills-overview">
-            <h2 class="overview-title">우연을 기회로 만드는 5가지 기술</h2>
-            <div class="overview-grid">
-                <div class="overview-item">
-                    <span class="overview-number">1</span>
-                    <span class="overview-name">Curiosity (호기심)</span>
-                </div>
-                <div class="overview-item">
-                    <span class="overview-number">2</span>
-                    <span class="overview-name">Persistence (끈기)</span>
-                </div>
-                <div class="overview-item">
-                    <span class="overview-number">3</span>
-                    <span class="overview-name">Flexibility (유연성)</span>
-                </div>
-                <div class="overview-item">
-                    <span class="overview-number">4</span>
-                    <span class="overview-name">Optimism (낙관주의)</span>
-                </div>
-                <div class="overview-item">
-                    <span class="overview-number">5</span>
-                    <span class="overview-name">Risk-taking (위험 감수)</span>
-                </div>
+<body class="bg-slate-900 text-gray-100 min-h-screen">
+    <!-- Header with Language Switcher -->
+    <header class="border-b border-slate-800 sticky top-0 z-50 bg-slate-900/95 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-cyan-400">Planned Happenstance</h1>
+                <p class="text-gray-400 text-sm mt-1">크롬볼츠 이벤트에서 발현된 기술들</p>
             </div>
+            <a href="https://planned-happenstance-en.vercel.app/skills.html"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 text-gray-300 hover:bg-slate-700 hover:text-cyan-400 transition">
+                <span>English</span>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </a>
         </div>
-        
-        <!-- Skill 1: Curiosity -->
-        <div class="skill-section">
-            <div class="skill-header">
-                <div class="skill-number">1️⃣</div>
-                <h2 class="skill-title">Curiosity (호기심)</h2>
-                <p class="skill-definition">새로운 학습 기회를 탐색하고 알아보려는 태도</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Page Title -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl sm:text-5xl font-bold text-white mb-4">우연을 기회로 만드는 5가지 기술</h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">크롬볼츠의 인생 이벤트를 통해 분석</p>
+        </div>
+
+        <!-- Skills Overview Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-16">
+            <div class="bg-slate-800 rounded-lg p-6 text-center hover:bg-slate-700 transition border border-slate-700">
+                <div class="text-4xl mb-3">🧠</div>
+                <h3 class="text-cyan-400 font-semibold text-lg">호기심</h3>
             </div>
-            
-            <div class="events-container">
-                <div class="event-card">
-                    <span class="event-badge">Event 1: 테니스의 시작</span>
-                    <p class="event-description">
-                        친구가 누나의 생일 선물 테니스 라켓을 가지고 나옴. "이게 뭐지?"
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 처음 보는 스포츠에 대한 호기심 → 길거리에서 직접 쳐봄 → 정식 코트까지 찾아감
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 4: 줄 서다가 상담학자가 되다</span>
-                    <p class="event-description">
-                        교육심리학 하러 갔는데 상담 수업 신청 줄이었음
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: "상담이 뭔지 모르지만 나 자신을 상담해서 뭐가 되고 싶은지 알아내면 좋겠다" → 예상치 못한 선택지에 대한 호기심
-                    </div>
-                </div>
+            <div class="bg-slate-800 rounded-lg p-6 text-center hover:bg-slate-700 transition border border-slate-700">
+                <div class="text-4xl mb-3">💪</div>
+                <h3 class="text-cyan-400 font-semibold text-lg">끈기</h3>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 text-center hover:bg-slate-700 transition border border-slate-700">
+                <div class="text-4xl mb-3">🔄</div>
+                <h3 class="text-cyan-400 font-semibold text-lg">유연성</h3>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 text-center hover:bg-slate-700 transition border border-slate-700">
+                <div class="text-4xl mb-3">☀️</div>
+                <h3 class="text-cyan-400 font-semibold text-lg">낙관주의</h3>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 text-center hover:bg-slate-700 transition border border-slate-700">
+                <div class="text-4xl mb-3">🎯</div>
+                <h3 class="text-cyan-400 font-semibold text-lg">위험 감수</h3>
             </div>
         </div>
-        
-        <!-- Skill 2: Persistence -->
-        <div class="skill-section">
-            <div class="skill-header">
-                <div class="skill-number">2️⃣</div>
-                <h2 class="skill-title">Persistence (끈기)</h2>
-                <p class="skill-definition">장애물에도 불구하고 노력을 지속하는 능력</p>
-            </div>
-            
-            <div class="events-container">
-                <div class="event-card">
-                    <span class="event-badge">Event 1: 테니스의 시작</span>
-                    <p class="event-description">
-                        길거리에서 탁구처럼 시작한 테니스
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 계속 연습 → 대학 정규 테니스팀(varsity tennis)이 될 때까지 지속
+
+        <!-- Detailed Skill Sections -->
+        <div class="space-y-12">
+
+            <!-- Skill 1: Curiosity -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="bg-gradient-to-r from-cyan-600 to-cyan-500 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">🧠</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Curiosity (호기심)</h3>
+                            <p class="text-cyan-100 mt-1">새로운 학습 기회를 탐색하고 알아보려는 태도</p>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 3: Born in Iowa, Go to Columbia</span>
-                    <p class="event-description">
-                        교수: "지원해볼 수는 있는데, 받아줄 것 같지는 않네"
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 부정적 예측에도 불구하고 지원 절차 완료
+                <div class="p-8 space-y-6">
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-cyan-400">
+                        <h4 class="font-semibold text-cyan-300 mb-2">Event 1: 테니스의 시작</h4>
+                        <p class="text-gray-300 mb-4">친구가 누나의 생일 선물 테니스 라켓을 가지고 나옴. "이게 뭐지?"</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-cyan-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">처음 보는 스포츠에 대한 호기심 → 길거리에서 직접 쳐봄 → 정식 코트까지 찾아감</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-cyan-400">
+                        <h4 class="font-semibold text-cyan-300 mb-2">Event 4: 줄 서다가 상담학자가 되다</h4>
+                        <p class="text-gray-300 mb-4">교육심리학 하러 갔는데 상담 수업 신청 줄이었음</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-cyan-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">"상담이 뭔지 모르지만 나 자신을 상담해서 뭐가 되고 싶은지 알아내면 좋겠다" → 예상치 못한 선택지에 대한 호기심</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Skill 2: Persistence -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-500 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">💪</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Persistence (끈기)</h3>
+                            <p class="text-purple-100 mt-1">장애물에도 불구하고 노력을 지속하는 능력</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-purple-400">
+                        <h4 class="font-semibold text-purple-300 mb-2">Event 1: 테니스의 시작</h4>
+                        <p class="text-gray-300 mb-4">길거리에서 탁구처럼 시작한 테니스</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-purple-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">계속 연습 → 대학 정규 테니스팀(varsity tennis)이 될 때까지 지속</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-purple-400">
+                        <h4 class="font-semibold text-purple-300 mb-2">Event 3: Born in Iowa, Go to Columbia</h4>
+                        <p class="text-gray-300 mb-4">교수: "지원해볼 수는 있는데, 받아줄 것 같지는 않네"</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-purple-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">부정적 예측에도 불구하고 지원 절차 완료</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skill 3: Flexibility -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">🔄</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Flexibility (유연성)</h3>
+                            <p class="text-emerald-100 mt-1">태도와 상황을 바꿀 수 있는 능력</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-emerald-400">
+                        <h4 class="font-semibold text-emerald-300 mb-2">Event 2: 테니스 코치의 정체</h4>
+                        <p class="text-gray-300 mb-4">뭘 전공할지 모르던 중 코치가 "당연히 심리학이지!"</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-emerald-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">특별히 정해둔 전공 없이 열린 마음으로 제안 수용 → 심리학 전공</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-emerald-400">
+                        <h4 class="font-semibold text-emerald-300 mb-2">Event 3: Born in Iowa, Go to Columbia</h4>
+                        <p class="text-gray-300 mb-4">아이오와 출신만 지원 가능한 fellowship을 우연히 알게 됨</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-emerald-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">계획에 없던 정보를 새로운 기회로 전환</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-emerald-400">
+                        <h4 class="font-semibold text-emerald-300 mb-2">Event 4: 줄 서다가 상담학자가 되다</h4>
+                        <p class="text-gray-300 mb-4">교육심리학 → 상담 수업 신청 줄이었음</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-emerald-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">계획과 다른 상황에서도 "이것도 괜찮겠다" → 상담 선택</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skill 4: Optimism -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="bg-gradient-to-r from-yellow-600 to-yellow-500 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">☀️</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Optimism (낙관주의)</h3>
+                            <p class="text-yellow-100 mt-1">새로운 기회를 가능한 것으로 보는 태도</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-yellow-400">
+                        <h4 class="font-semibold text-yellow-300 mb-2">Event 2: 테니스 코치의 정체</h4>
+                        <p class="text-gray-300 mb-4">심리학이 뭔지도 모르면서 전공 선택</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-yellow-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">"해보면 괜찮을 거야" → 수업 듣고 정말 좋아함, 도서관에서 논문까지 읽음</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-yellow-400">
+                        <h4 class="font-semibold text-yellow-300 mb-2">Event 4: 줄 서다가 상담학자가 되다</h4>
+                        <p class="text-gray-300 mb-4">상담이 뭔지 모르지만 신청</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-yellow-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">알지 못하는 분야에 대한 부정적 편견 없이 긍정적 가능성 탐색</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skill 5: Risk-taking -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+                <div class="bg-gradient-to-r from-red-600 to-red-500 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">🎯</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Risk-taking (위험 감수)</h3>
+                            <p class="text-red-100 mt-1">불확실한 결과에도 불구하고 행동을 취하는 용기</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-red-400">
+                        <h4 class="font-semibold text-red-300 mb-2">Event 3: Born in Iowa, Go to Columbia</h4>
+                        <p class="text-gray-300 mb-4">"받아줄 것 같지 않다"는 교수의 말</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-red-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">실패 가능성을 알면서도 지원 → 합격</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/50 rounded-lg p-6 border-l-4 border-red-400">
+                        <h4 class="font-semibold text-red-300 mb-2">Event 4: 줄 서다가 상담학자가 되다</h4>
+                        <p class="text-gray-300 mb-4">잘못 선 줄인 것을 알았지만 그대로 상담 수업 신청</p>
+                        <div class="bg-slate-700 rounded p-4 text-gray-200">
+                            <p class="text-sm font-medium text-red-400 mb-2">💡 발현:</p>
+                            <p class="text-gray-300">계획과 다른 선택을 하는 것에 대한 두려움 없이 행동</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
-        
-        <!-- Skill 3: Flexibility -->
-        <div class="skill-section">
-            <div class="skill-header">
-                <div class="skill-number">3️⃣</div>
-                <h2 class="skill-title">Flexibility (유연성)</h2>
-                <p class="skill-definition">태도와 상황을 바꿀 수 있는 능력</p>
-            </div>
-            
-            <div class="events-container">
-                <div class="event-card">
-                    <span class="event-badge">Event 2: 테니스 코치의 정체</span>
-                    <p class="event-description">
-                        뭘 전공할지 모르던 중 코치가 "당연히 심리학이지!"
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 특별히 정해둔 전공 없이 열린 마음으로 제안 수용 → 심리학 전공
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 3: Born in Iowa, Go to Columbia</span>
-                    <p class="event-description">
-                        아이오와 출신만 지원 가능한 fellowship을 우연히 알게 됨
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 계획에 없던 정보를 새로운 기회로 전환
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 4: 줄 서다가 상담학자가 되다</span>
-                    <p class="event-description">
-                        교육심리학 → 상담 수업 신청 줄이었음
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 계획과 다른 상황에서도 "이것도 괜찮겠다" → 상담 선택
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Skill 4: Optimism -->
-        <div class="skill-section">
-            <div class="skill-header">
-                <div class="skill-number">4️⃣</div>
-                <h2 class="skill-title">Optimism (낙관주의)</h2>
-                <p class="skill-definition">새로운 기회를 가능한 것으로 보는 태도</p>
-            </div>
-            
-            <div class="events-container">
-                <div class="event-card">
-                    <span class="event-badge">Event 2: 테니스 코치의 정체</span>
-                    <p class="event-description">
-                        심리학이 뭔지도 모르면서 전공 선택
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: "해보면 괜찮을 거야" → 수업 듣고 정말 좋아함, 도서관에서 논문까지 읽음
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 4: 줄 서다가 상담학자가 되다</span>
-                    <p class="event-description">
-                        상담이 뭔지 모르지만 신청
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 알지 못하는 분야에 대한 부정적 편견 없이 긍정적 가능성 탐색
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Skill 5: Risk-taking -->
-        <div class="skill-section">
-            <div class="skill-header">
-                <div class="skill-number">5️⃣</div>
-                <h2 class="skill-title">Risk-taking (위험 감수)</h2>
-                <p class="skill-definition">불확실한 결과에도 불구하고 행동을 취하는 용기</p>
-            </div>
-            
-            <div class="events-container">
-                <div class="event-card">
-                    <span class="event-badge">Event 3: Born in Iowa, Go to Columbia</span>
-                    <p class="event-description">
-                        "받아줄 것 같지 않다"는 교수의 말
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 실패 가능성을 알면서도 지원 → 합격
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <span class="event-badge">Event 4: 줄 서다가 상담학자가 되다</span>
-                    <p class="event-description">
-                        잘못 선 줄인 것을 알았지만 그대로 상담 수업 신청
-                    </p>
-                    <div class="manifestation">
-                        💡 발현: 계획과 다른 선택을 하는 것에 대한 두려움 없이 행동
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="cta-section">
-            <p class="cta-text">
-                나의 우연, AI로 분석하기
-            </p>
-            <button class="cta-btn" onclick="window.location.href='my_story_ai.html'">
+
+        <!-- CTA Section -->
+        <div class="mt-16 bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-xl p-8 text-center">
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4">나의 우연, AI로 분석하기</h3>
+            <a href="/my_story_ai.html"
+                class="inline-flex items-center justify-center px-8 py-4 bg-white text-cyan-600 font-semibold rounded-lg hover:bg-cyan-50 transition text-lg">
                 내 이야기 만들기 →
-            </button>
+            </a>
         </div>
-        
-        <div class="footer">
-            <p class="source-link">
-                출처:<br>
-                <a href="https://en.wikipedia.org/wiki/John_D._Krumboltz" target="_blank">Wikipedia - John D. Krumboltz</a><br>
-                <a href="https://www.youtube.com/watch?v=_3x9BN221FI" target="_blank">"You're Hired!" TV Show Episode #20, Steve Piazzale 인터뷰 (2009)</a>
+
+        <!-- Sources Section -->
+        <footer class="mt-16 pt-8 border-t border-slate-700">
+            <div class="text-center">
+                <h4 class="text-gray-400 font-semibold mb-4">출처</h4>
+                <ul class="text-gray-500 text-sm space-y-2 max-w-2xl mx-auto">
+                    <li>
+                        <a href="https://en.wikipedia.org/wiki/John_D._Krumboltz" class="text-cyan-400 hover:text-cyan-300 transition">Wikipedia - John D. Krumboltz</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=_3x9BN221FI" class="text-cyan-400 hover:text-cyan-300 transition">"You're Hired!" TV Show Episode #20, Steve Piazzale 인터뷰 (2009)</a>
+                    </li>
+                </ul>
+            </div>
+            <p class="text-center text-gray-600 text-xs mt-8">
+                Planned Happenstance: 5가지 기술 분석 | 크롬볼츠의 인생 이벤트를 통한 커리어 개발 분석
             </p>
-        </div>
-    </div>
+        </footer>
+    </main>
 </body>
 </html>

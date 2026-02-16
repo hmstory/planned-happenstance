@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planned Happenstance - 계획된 우연</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -20,31 +15,30 @@
             justify-content: center;
             padding: 20px;
         }
-        
-        .container {
-            max-width: 600px;
-            width: 100%;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .title {
-            font-size: 42px;
-            font-weight: 700;
+        .lang-switch {
+            position: fixed;
+            top: 16px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(6, 182, 212, 0.3);
             color: #06b6d4;
-            margin-bottom: 12px;
-            letter-spacing: -1px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
         }
-        
-        .subtitle {
-            font-size: 18px;
-            color: #94a3b8;
-            font-weight: 400;
+        .lang-switch:hover {
+            background: rgba(30, 41, 59, 1);
+            border-color: rgba(6, 182, 212, 0.5);
         }
-        
+        .container { max-width: 600px; width: 100%; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 42px; font-weight: 700; color: #06b6d4; margin-bottom: 12px; letter-spacing: -1px; }
+        .subtitle { font-size: 18px; color: #94a3b8; font-weight: 400; }
         .theory-box {
             background: rgba(15, 23, 42, 0.6);
             border: 2px solid rgba(6, 182, 212, 0.3);
@@ -53,32 +47,10 @@
             margin-bottom: 40px;
             backdrop-filter: blur(10px);
         }
-        
-        .theory-author {
-            color: #06b6d4;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
-        }
-        
-        .theory-text {
-            color: #e2e8f0;
-            font-size: 16px;
-            line-height: 1.7;
-        }
-        
-        .theory-text strong {
-            color: #06b6d4;
-            font-weight: 600;
-        }
-        
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
+        .theory-author { color: #06b6d4; font-size: 14px; font-weight: 600; margin-bottom: 16px; letter-spacing: 0.5px; }
+        .theory-text { color: #e2e8f0; font-size: 16px; line-height: 1.7; }
+        .theory-text strong { color: #06b6d4; font-weight: 600; }
+        .buttons { display: flex; flex-direction: column; gap: 16px; }
         .btn {
             padding: 18px 32px;
             border-radius: 12px;
@@ -89,51 +61,33 @@
             transition: all 0.3s ease;
             text-align: center;
         }
-        
         .btn-primary {
             background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
-        }
-        
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4); }
         .btn-secondary {
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(6, 182, 212, 0.3);
             color: #06b6d4;
         }
-        
-        .btn-secondary:hover {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(6, 182, 212, 0.5);
-        }
-        
+        .btn-secondary:hover { background: rgba(30, 41, 59, 0.8); border-color: rgba(6, 182, 212, 0.5); }
         @media (max-width: 768px) {
-            .title {
-                font-size: 32px;
-            }
-            
-            .subtitle {
-                font-size: 16px;
-            }
-            
-            .theory-box {
-                padding: 24px;
-            }
+            .title { font-size: 32px; }
+            .subtitle { font-size: 16px; }
+            .theory-box { padding: 24px; }
+            .lang-switch { top: 12px; right: 12px; padding: 6px 12px; font-size: 13px; }
         }
     </style>
 </head>
 <body>
+    <a href="https://planned-happenstance-en.vercel.app" class="lang-switch">English</a>
     <div class="container">
         <div class="header">
             <h1 class="title">Planned Happenstance</h1>
             <p class="subtitle">계획된 우연: 커리어를 바꾸는 새로운 관점</p>
         </div>
-        
         <div class="theory-box">
             <p class="theory-author">John Krumboltz (스탠포드 대학 심리학 교수, 1928-2019)</p>
             <p class="theory-text" style="margin-bottom: 20px;">
@@ -143,7 +97,6 @@
                 "아무것도 안 하면 아무 일도 안 일어난다. 무언가를 하면 무슨 일인가 일어난다."
             </p>
         </div>
-        
         <div class="buttons">
             <button class="btn btn-primary" onclick="window.location.href='krumboltz_example_final.html'">
                 크롬볼츠 예시 먼저 보기 →
